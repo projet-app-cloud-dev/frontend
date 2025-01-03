@@ -1,14 +1,13 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpErrorResponse} from "@angular/common/http";
+import {HttpClient, HttpErrorResponse, HttpParams} from "@angular/common/http";
 
 import {environment} from '../environments/environment';
-import {ApiToken, UsernameAndPassword} from "./model";
+import {ApiToken, Card, Collection, Collections, UsernameAndPassword} from "./model";
 import {catchError, map, Observable, of} from "rxjs";
 
 export type ApiResponse<T, E> = Ok<T> | Err<E>;
 
 export class Ok<T> {
-
     constructor(public value: T) {
     }
 
@@ -36,7 +35,7 @@ export class Err<E> {
 
 
 export enum ApiError {
-    ClientError, InvalidInput, NotFound, Other, Conflict
+    ClientError, InvalidInput, MissingAuth, Unauthorized, NotFound, Other, Conflict
 }
 
 function mapError(err: HttpErrorResponse, _: any): Observable<Err<ApiError>> {
@@ -49,6 +48,12 @@ function mapError(err: HttpErrorResponse, _: any): Observable<Err<ApiError>> {
         switch (err.status) {
             case 400:
                 error = ApiError.InvalidInput;
+                break;
+            case 401:
+                error = ApiError.MissingAuth;
+                break;
+            case 403:
+                error = ApiError.Unauthorized;
                 break;
             case 404:
                 error = ApiError.NotFound;
@@ -109,5 +114,74 @@ export class ApiService {
 
     logout() {
         this.apiKey = null;
+    }
+
+    getCollectionList(mine: boolean = false, page: number = 0) {
+        return this.httpClient.get<Collections>(environment.apiUrl + "/collections/", {
+            params: new HttpParams().set("page", page).set("mine", mine)
+        }).pipe(map((api, _) => {
+            return new Ok(api);
+        }), catchError(mapError))
+    }
+
+    getCollection(id: number) {
+        return this.httpClient.get<Collection>(environment.apiUrl + "/collections/" + id.toString()).pipe(map((api, _) => {
+            return new Ok(api);
+        }), catchError(mapError))
+    }
+
+    createCollection(name: string) {
+        return this.httpClient.post<Collection>(environment.apiUrl + "/collections/", {
+            name: name,
+        }).pipe(map((api, _) => {
+            return new Ok(api);
+        }), catchError(mapError))
+    }
+
+
+    editCollection(id: number, newName: string) {
+        return this.httpClient.post<Collection>(environment.apiUrl + "/collections/" + id.toString(), {
+            name: newName,
+        }).pipe(map((api, _) => {
+            return new Ok(api);
+        }), catchError(mapError))
+    }
+
+    removeCollection(id: number) {
+        return this.httpClient.delete<void>(environment.apiUrl + "/collections/" + id.toString()).pipe(map((api, _) => {
+            return new Ok(api);
+        }), catchError(mapError))
+    }
+
+    setCardInCollection(collectionId: number, cardId: number, count: number) {
+        return this.httpClient.post<void>(environment.apiUrl + "/collections/" + collectionId.toString() + "/cards", {
+            cardId: cardId, cardCount: count
+        }).pipe(map((api, _) => {
+            return new Ok(api);
+        }), catchError(mapError))
+    }
+
+    removeCardFromCollection(collectionId: number, cardId: number) {
+        return this.httpClient.delete<void>(environment.apiUrl + "/collections/" + collectionId.toString() + "/cards/" + cardId).pipe(map((api, _) => {
+            return new Ok(api);
+        }), catchError(mapError))
+    }
+
+    searchCards(query: string = "", page: number = 0) {
+        return this.httpClient.get<Card[]>(environment.apiUrl + "/cards/", {
+            params: new HttpParams().set("query", query).set("page", page)
+        }).pipe(map((api, _) => {
+            return new Ok(api);
+        }), catchError(mapError))
+    }
+
+    getCard(id: number) {
+        return this.httpClient.get<Card>(environment.apiUrl + "/cards/" + id.toString()).pipe(map((api, _) => {
+            return new Ok(api);
+        }), catchError(mapError))
+    }
+
+    getCardUrl(id : number) : string {
+        return environment.apiUrl + "/cards/" + id.toString() + "/image";
     }
 }
