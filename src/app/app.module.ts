@@ -1,4 +1,4 @@
-import {NgModule} from '@angular/core';
+import {ErrorHandler, NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 
 import {AppRoutingModule} from './app-routing.module';
@@ -22,35 +22,15 @@ import {MatInputModule} from "@angular/material/input";
 import {MatIconModule} from "@angular/material/icon";
 import {MatButtonModule} from "@angular/material/button";
 import {MatGridListModule} from "@angular/material/grid-list";
+import {ApplicationinsightsAngularpluginErrorService} from "@microsoft/applicationinsights-angularplugin-js";
 
 
 @NgModule({
-    declarations: [
-        AppComponent,
-        PageNotFoundComponent,
-        LoginComponent,
-        SignupComponent,
-        CreateCollectionComponent,
-        ViewCollectionComponent,
-        AddNewCardDialog,
-        EditCardCountDialog
-    ],
-    imports: [
-        BrowserModule,
-        FormsModule,
-        HttpClientModule,
-        PokemonModule,
-        AppRoutingModule,
-        NgOptimizedImage,
-        MatDialogModule,
-        MatCardModule,
-        MatInputModule,
-        MatIconModule,
-        MatButtonModule,
-        MatGridListModule,
-        ReactiveFormsModule
-    ],
-    providers: [],
+    declarations: [AppComponent, PageNotFoundComponent, LoginComponent, SignupComponent, CreateCollectionComponent, ViewCollectionComponent, AddNewCardDialog, EditCardCountDialog],
+    imports: [BrowserModule, FormsModule, HttpClientModule, PokemonModule, AppRoutingModule, NgOptimizedImage, MatDialogModule, MatCardModule, MatInputModule, MatIconModule, MatButtonModule, MatGridListModule, ReactiveFormsModule],
+    providers: [{
+        provide: ErrorHandler, useClass: ApplicationinsightsAngularpluginErrorService,
+    },],
     bootstrap: [AppComponent]
 })
 export class AppModule {

@@ -2,6 +2,8 @@ name: Build - Prod
 on:
   push:
     branches: [ "main" ]
+  merge:
+    branches: [ "main" ]
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -13,7 +15,7 @@ jobs:
           node-version: 18.x
           cache: 'npm'
       - run: npm ci
-      - run: npm run setApiKey ${{ secrets.PROD_API_URL }}
+      - run: npm run setApiKey ${{ secrets.PROD_API_URL }} ${{ secrets.PROD_APP_INSIGHT }}
       - run: npm run build --prod
       - run: npm test --if-present
       - name: Build And Deploy
