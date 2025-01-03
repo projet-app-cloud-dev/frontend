@@ -1,0 +1,15 @@
+<h1 mat-dialog-title>Ajouter un pokemon</h1>
+<mat-dialog-content style="width: 1500px;">
+    <mat-form-field style="width: 100%;">
+        <mat-label>Recherche</mat-label>
+        <input matInput type="text" [(ngModel)]="search" (ngModelChange)="onSearchChange()">
+        <button *ngIf="search" matSuffix mat-icon-button aria-label="Clear" (click)="search=''">
+            <mat-icon>close</mat-icon>
+        </button>
+    </mat-form-field>
+    <mat-grid-list cols="2">
+        <mat-grid-tile *ngFor="let card of searchResult">
+            <img src="{{card.imageUrl}}" [mat-dialog-close]="[card.id]" style="object-fit: contain;"/>
+        </mat-grid-tile>
+    </mat-grid-list>
+</mat-dialog-content>

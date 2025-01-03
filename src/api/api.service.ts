@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpErrorResponse, HttpParams} from "@angular/common/http";
+import {HttpClient, HttpErrorResponse, HttpHeaders, HttpParams} from "@angular/common/http";
 
 import {environment} from '../environments/environment';
 import {ApiToken, Card, Collection, Collections, UsernameAndPassword} from "./model";
@@ -118,7 +118,8 @@ export class ApiService {
 
     getCollectionList(mine: boolean = false, page: number = 0) {
         return this.httpClient.get<Collections>(environment.apiUrl + "/collections/", {
-            params: new HttpParams().set("page", page).set("mine", mine)
+            params: new HttpParams().set("page", page).set("mine", mine),
+            headers: new HttpHeaders().set("Authorization", "Bearer " + this.apiKey),
         }).pipe(map((api, _) => {
             return new Ok(api);
         }), catchError(mapError))
@@ -133,6 +134,8 @@ export class ApiService {
     createCollection(name: string) {
         return this.httpClient.post<Collection>(environment.apiUrl + "/collections/", {
             name: name,
+        }, {
+            headers: new HttpHeaders().set("Authorization", "Bearer " + this.apiKey),
         }).pipe(map((api, _) => {
             return new Ok(api);
         }), catchError(mapError))
@@ -142,13 +145,17 @@ export class ApiService {
     editCollection(id: number, newName: string) {
         return this.httpClient.post<Collection>(environment.apiUrl + "/collections/" + id.toString(), {
             name: newName,
+        }, {
+            headers: new HttpHeaders().set("Authorization", "Bearer " + this.apiKey),
         }).pipe(map((api, _) => {
             return new Ok(api);
         }), catchError(mapError))
     }
 
     removeCollection(id: number) {
-        return this.httpClient.delete<void>(environment.apiUrl + "/collections/" + id.toString()).pipe(map((api, _) => {
+        return this.httpClient.delete<void>(environment.apiUrl + "/collections/" + id.toString(), {
+            headers: new HttpHeaders().set("Authorization", "Bearer " + this.apiKey),
+        }).pipe(map((api, _) => {
             return new Ok(api);
         }), catchError(mapError))
     }
@@ -156,13 +163,17 @@ export class ApiService {
     setCardInCollection(collectionId: number, cardId: number, count: number) {
         return this.httpClient.post<void>(environment.apiUrl + "/collections/" + collectionId.toString() + "/cards", {
             cardId: cardId, cardCount: count
+        }, {
+            headers: new HttpHeaders().set("Authorization", "Bearer " + this.apiKey),
         }).pipe(map((api, _) => {
             return new Ok(api);
         }), catchError(mapError))
     }
 
     removeCardFromCollection(collectionId: number, cardId: number) {
-        return this.httpClient.delete<void>(environment.apiUrl + "/collections/" + collectionId.toString() + "/cards/" + cardId).pipe(map((api, _) => {
+        return this.httpClient.delete<void>(environment.apiUrl + "/collections/" + collectionId.toString() + "/cards/" + cardId, {
+            headers: new HttpHeaders().set("Authorization", "Bearer " + this.apiKey),
+        }).pipe(map((api, _) => {
             return new Ok(api);
         }), catchError(mapError))
     }
@@ -181,7 +192,7 @@ export class ApiService {
         }), catchError(mapError))
     }
 
-    getCardUrl(id : number) : string {
+    getCardUrl(id: number): string {
         return environment.apiUrl + "/cards/" + id.toString() + "/image";
     }
 }
