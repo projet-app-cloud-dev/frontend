@@ -1,0 +1,18 @@
+<h1 mat-dialog-title>Modifier le nombre de cartes</h1>
+<div mat-dialog-content>
+    <mat-form-field style="width: 100%">
+        <mat-label>Nombre</mat-label>
+        <input matInput
+               [formControl]="numberFormControl"
+               type="number"/>
+        <mat-error *ngIf="numberFormControl.hasError('required')">
+            Valeur invalide
+        </mat-error>
+    </mat-form-field>
+</div>
+<mat-dialog-actions>
+    <button mat-button mat-dialog-close>Annuler</button>
+    <button mat-button [mat-dialog-close]="[numberFormControl.value]"
+            [disabled]="numberFormControl.hasError('required')">Modifier
+    </button>
+</mat-dialog-actions>
