@@ -16,13 +16,13 @@ jobs:
           cache: 'npm'
       - run: npm ci
       - run: npm run setApiKey ${{ secrets.DEV_API_URL }}
-        if: secrets.DEV_API_URL != ''
       - run: npm run build --prod
       - run: npm test --if-present
       - name: Build And Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
-        if: secrets.DEV_AZURE_TOKEN != ''
+        env:
+          SKIP_DEPLOY_ON_MISSING_SECRETS: true
         with:
           azure_static_web_apps_api_token: ${{ secrets.DEV_AZURE_TOKEN }}
           action: "upload"
