@@ -15,7 +15,7 @@ jobs:
           node-version: 18.x
           cache: 'npm'
       - run: npm ci
-      - run: npm run setApiKey ${{ secrets.DEV_API_URL }} ${{ secrets.DEV_APP_INSIGHT }}
+      - run: npm run setApiKey "${{ secrets.DEV_API_URL }}" "${{ secrets.DEV_APP_INSIGHT }}"
       - run: npm run build --prod
       - run: npm test --if-present
       - name: Build And Deploy
