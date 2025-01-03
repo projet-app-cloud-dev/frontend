@@ -12,10 +12,10 @@ export class AppComponent {
     private angularPlugin = new AngularPlugin();
 
     constructor(public authService: AuthService,) {
-        if (environment.instrumentationKey != null) {
+        if (environment.connectionString != null) {
             this.appInsights = new ApplicationInsights({
                 config: {
-                    instrumentationKey: environment.instrumentationKey, enableAutoRouteTracking: true, // option to log all route changes
+                    connectionString: environment.connectionString, enableAutoRouteTracking: true, // option to log all route changes
                     extensionConfig: {
                         [this.angularPlugin.identifier]: {
                             errorServices: [new ErrorHandler()],
