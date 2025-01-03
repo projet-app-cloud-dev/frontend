@@ -3,6 +3,14 @@
         <a href="#" class="brand-logo center">
             Pokédex
         </a>
+
+        <a (click)="authService.logout()" class="brand-logo right" *ngIf="authService.isLoggedIn">
+            Se déconnecter
+        </a>
+
+        <a routerLink="/login" class="brand-logo right" *ngIf="!authService.isLoggedIn">
+            Se connecter
+        </a>
     </div>
 </nav>
 
