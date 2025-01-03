@@ -1,52 +1,31 @@
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
-import { catchError, map, tap } from 'rxjs/operators';
+import {Injectable} from '@angular/core';
+import {map, Observable} from "rxjs";
+import {ApiError, ApiResponse, ApiService, Ok} from "../api/api.service";
+import {ApiToken} from "../api/model";
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
 export class AuthService {
-  private loginUrl = 'http://localhost:8080/login'; // URL de l'API de connexion
-  private signupUrl = 'http://localhost:8080/signup'; // URL de l'API d'inscription
-  private isAuthenticated = false;
+    constructor(private apiService: ApiService) {
+    }
 
-  constructor(private http: HttpClient) {}
+    get isLoggedIn(): boolean {
+        return this.apiService.apiKey != null;
+    }
 
-  get isLoggedIn(): boolean {
-    return this.isAuthenticated;
-  }
+    login(name: string, password: string): Observable<ApiResponse<ApiToken, ApiError>> {
+        return this.apiService.login(name, password).pipe(map((response, _) => {
+            if (response instanceof Ok<ApiToken>) {
+                localStorage.setItem("apiToken", response.value.token);
+            } else {
+                localStorage.clear()
+            }
+            return response;
+        }));
+    }
 
-  login(username: string, password: string): Observable<boolean> {
-    return this.http.post<{ token: string }>(this.loginUrl, { username, password }).pipe(
-        tap(response => {
-          localStorage.setItem('authToken', response.token); // Stocker le jeton
-          this.isAuthenticated = true;
-        }),
-        map(() => true),
-        catchError(() => {
-          this.isAuthenticated = false;
-          return of(false);
-        })
-    );
-  }
-
-  signup(username: string, password: string): Observable<boolean> {
-    return this.http.post<{ token: string }>(this.signupUrl, { username, password }).pipe(
-        tap(response => {
-          localStorage.setItem('authToken', response.token); // Stocker le jeton
-          this.isAuthenticated = true;
-        }),
-        map(() => true),
-        catchError(() => {
-          this.isAuthenticated = false;
-          return of(false);
-        })
-    );
-  }
-
-  logout(): void {
-    localStorage.removeItem('authToken');
-    this.isAuthenticated = false;
-  }
+    logout() {
+        this.apiService.logout();
+    }
 }
