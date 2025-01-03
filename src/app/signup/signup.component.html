@@ -2,7 +2,7 @@
     <div class="col s12 m4 offset-m4">
         <div class="card hoverable">
             <div class="card-content center">
-                <span class="card-title">Page de connexion</span>
+                <span class="card-title">Se créer un compte</span>
                 <p *ngIf="message != null"><em>{{ message }}</em></p>
             </div>
             <form #loginForm="ngForm">
@@ -16,9 +16,8 @@
                 </div>
             </form>
             <div class="card-action center">
-                <a (click)="signup()">Créer un compte</a>
-                <a (click)="login()" class="waves-effect waves-light btn">Se
-                    connecter</a>
+                <a (click)="login()">Se connecter</a>
+                <a (click)="signup()" class="waves-effect waves-light btn">Créer un compte</a>
             </div>
         </div>
     </div>
