@@ -1,20 +1,31 @@
+<div style="display: flex;justify-content: center;">
 
+    <input
+            id="searchInput"
+            type="text"
+            (keyup.enter)="searchPokemon()"
+            placeholder="Rechercher un PokÃ©mon"
+            style="z-index:1;  margin-top: 15px; width: 25%; border: 1px solid #ccc; border-radius: 5px;"
+    />
+
+</div>
 
 <div class="container">
 
-    <div class="row" >
+    <div class="row">
+        <div id="divPokedex">
+            <img style="" id="pokedex" src="/assets/pokedex.png" />
+            <img  id="carte" *ngIf="cardImageUrl" [src]="cardImageUrl" />
+            <!-- Ajout de l'input -->
 
-        <div  id="divPokedex">
-            <img id="pokedex" src='/assets/pokedex.png'/>
-            <img id="carte" src='https://images.pokemontcg.io/xy1/142.png' />
         </div>
     </div>
 </div>
 
-<a class="btn-floating btn-large waves-effect waves-light red z-depth-3"
-   style="position: fixed; bottom: 25px; right: 25px"
-   routerLink="/pokemon/add"
-   >
+<a
+        class="btn-floating btn-large waves-effect waves-light red z-depth-3"
+        style="position: fixed; bottom: 25px; right: 25px"
+        routerLink="/pokemon/add"
+>
     plus
 </a>
-
