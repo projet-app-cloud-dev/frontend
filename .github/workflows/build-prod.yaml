@@ -1,4 +1,4 @@
-name: Build - Dev
+name: Build - Prod
 on:
   push:
     branches: [ "main" ]
@@ -15,7 +15,7 @@ jobs:
           node-version: 18.x
           cache: 'npm'
       - run: npm ci
-      - run: npm run setApiKey ${{ secrets.PROD_API_KEY }}
+      - run: npm run setApiKey ${{ secrets.PROD_API_URL }}
         # if: github.ref == 'refs/heads/main'
       - run: npm run build --prod
       - run: npm test --if-present
